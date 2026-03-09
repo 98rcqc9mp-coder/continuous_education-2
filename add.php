@@ -35,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $course_id = $_POST['course_id'];
         $full_name = $_POST['full_name'];
         $phone = $_POST['phone'] ?? null;
+        $email = trim((string)($_POST['email'] ?? '')) ?: null;
         $gender = $_POST['gender'];
         $inside_university = $_POST['inside_university'];
 
@@ -47,27 +48,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $specific_specialization = $_POST['specific_specialization'] ?? null;
         $work_place = $_POST['work_place'];
 
-        /* إضافة المشارك (NO CHANGE) */
-        $stmt = $pdo->prepare("
-            INSERT INTO participants
-            (full_name, gender, inside_university, work_place,
-             phone, general_specialization, specific_specialization,
-             academic_title, job_specialization, academic_rank)
-            VALUES (?,?,?,?,?,?,?,?,?,?)
-        ");
+        /* التحقق من وجود عمود email في الجدول */
+        $hasEmail = false;
+        try {
+            $colCheck = $pdo->query("SHOW COLUMNS FROM participants LIKE 'email'")->fetch();
+            $hasEmail = (bool)$colCheck;
+        } catch (Exception $ignored) {}
 
-        $stmt->execute([
-            $full_name,
-            $gender,
-            $inside_university,
-            $work_place,
-            $phone,
-            $general_specialization,
-            $specific_specialization,
-            $academic_title,
-            $job_specialization,
-            $academic_rank
-        ]);
+        /* إضافة المشارك (NO CHANGE) */
+        if ($hasEmail) {
+            $stmt = $pdo->prepare("
+                INSERT INTO participants
+                (full_name, gender, inside_university, work_place,
+                 phone, email, general_specialization, specific_specialization,
+                 academic_title, job_specialization, academic_rank)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?)
+            ");
+            $stmt->execute([
+                $full_name, $gender, $inside_university, $work_place,
+                $phone, $email,
+                $general_specialization, $specific_specialization,
+                $academic_title, $job_specialization, $academic_rank
+            ]);
+        } else {
+            $stmt = $pdo->prepare("
+                INSERT INTO participants
+                (full_name, gender, inside_university, work_place,
+                 phone, general_specialization, specific_specialization,
+                 academic_title, job_specialization, academic_rank)
+                VALUES (?,?,?,?,?,?,?,?,?,?)
+            ");
+            $stmt->execute([
+                $full_name, $gender, $inside_university, $work_place,
+                $phone,
+                $general_specialization, $specific_specialization,
+                $academic_title, $job_specialization, $academic_rank
+            ]);
+        }
 
         $participant_id = $pdo->lastInsertId();
 
@@ -82,6 +99,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->commit();
 
         $success = "✅ تمت إضافة المشارك وربطه بالدورة بنجاح";
+
+        /* إرسال بريد إلكتروني للمشارك (إن توفر البريد) */
+        if ($email) {
+            $mailLib = __DIR__ . '/../../lib/mail.php';
+            if (file_exists($mailLib)) {
+                require_once $mailLib;
+                $courseRow = $pdo->prepare("SELECT course_name, start_date FROM courses WHERE id=? LIMIT 1");
+                $courseRow->execute([$course_id]);
+                $courseData = $courseRow->fetch();
+                if ($courseData) {
+                    @sendCourseRegistrationEmail(
+                        $email,
+                        $full_name,
+                        $courseData['course_name'],
+                        $courseData['start_date'] ?? ''
+                    );
+                }
+            }
+        }
 
     } catch (Exception $e) {
         $pdo->rollBack();
@@ -428,6 +464,11 @@ body.light-mode .form-label{ color:#0f172a; }
             <div class="col-lg-6">
               <label class="form-label">رقم الهاتف</label>
               <input type="text" name="phone" class="form-control">
+            </div>
+
+            <div class="col-lg-6">
+              <label class="form-label">البريد الإلكتروني <span style="color:var(--muted);font-size:12px;">(اختياري — لإرسال إشعار)</span></label>
+              <input type="email" name="email" class="form-control" placeholder="example@domain.com" dir="ltr">
             </div>
 
             <div class="col-lg-6">
