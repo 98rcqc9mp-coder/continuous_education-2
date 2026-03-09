@@ -1,0 +1,250 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.4
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Mar 09, 2026 at 10:21 PM
+-- Server version: 10.4.17-MariaDB
+-- PHP Version: 7.4.14
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `continuous_education`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courses`
+--
+
+CREATE TABLE `courses` (
+  `id` int(11) NOT NULL,
+  `course_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `course_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `course_category` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `course_plan_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `beneficiary` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `target_group` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lecturer` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lecturer_hours` int(11) DEFAULT NULL,
+  `course_manager` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `days_count` int(11) DEFAULT NULL,
+  `lecture_time` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `platform` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `max_participants` int(11) DEFAULT NULL,
+  `participation_fee` decimal(10,2) DEFAULT NULL,
+  `status` enum('مفتوحة','مغلقة','منتهية') COLLATE utf8mb4_unicode_ci DEFAULT 'مفتوحة',
+  `curriculum_file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `axes_file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `form_file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `admin_order_file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `executing_entity_file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `courses`
+--
+
+INSERT INTO `courses` (`id`, `course_name`, `course_type`, `course_category`, `course_plan_type`, `beneficiary`, `target_group`, `lecturer`, `lecturer_hours`, `course_manager`, `days_count`, `lecture_time`, `start_date`, `end_date`, `location`, `platform`, `max_participants`, `participation_fee`, `status`, `curriculum_file`, `axes_file`, `form_file`, `admin_order_file`, `executing_entity_file`, `created_at`) VALUES
+(1, 'تعليم برمجة تقنيات', 'حضوري', 'دورة', 'مضاف', 'قطاع حكومي', 'موظفين', 'سيف الدين محمد', 1, 'ادم داود', 25, '10', '2026-03-04', '2026-04-04', '', NULL, 15, '50000.00', '', '1772574620_curriculum____________________________.pdf', '1772574620_axes__________________________.pdf', '1772574620_form_______.pdf', '1772574620_admin_1.pdf', '1772574620_entity_________________________________________________oop.pdf', '2026-03-03 21:50:20'),
+(2, 'تقنيات الارتنيت', 'حضوري', 'دورة', 'مضاف', 'قطاع حكومي', 'موظفين', 'نور', 5, 'اني', 4, '2', '2026-03-06', '2026-03-10', '', NULL, 10, '32.00', '', '', '', '', '', '', '2026-03-06 17:01:19'),
+(3, 'يلقب', 'حضوري', 'دورة', 'مخطط', 'قطاع حكومي', 'تدريسيين', 'سب', 23, 'سربثب', 3, '2', '2026-03-09', '2026-01-06', '', NULL, 0, '0.00', '', '', '', '', '', '', '2026-03-09 20:31:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_participants`
+--
+
+CREATE TABLE `course_participants` (
+  `id` int(11) NOT NULL,
+  `course_id` int(11) NOT NULL,
+  `participant_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `course_participants`
+--
+
+INSERT INTO `course_participants` (`id`, `course_id`, `participant_id`, `created_at`) VALUES
+(1, 1, 1, '2026-03-09 20:37:43'),
+(2, 1, 2, '2026-03-09 20:37:43'),
+(3, 2, 3, '2026-03-09 20:40:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `design`
+--
+
+CREATE TABLE `design` (
+  `id` int(11) NOT NULL,
+  `site_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT 'نظام التعليم المستمر',
+  `primary_color` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT '#0d6efd',
+  `logo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `design`
+--
+
+INSERT INTO `design` (`id`, `site_name`, `primary_color`, `logo`, `updated_at`) VALUES
+(1, 'نظام التعليم المستمر', '#0d6efd', NULL, '2026-03-03 21:48:38');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participants`
+--
+
+CREATE TABLE `participants` (
+  `id` int(11) NOT NULL,
+  `full_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gender` enum('ذكر','أنثى') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `work_place` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `academic_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `academic_rank` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `job_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `general_specialization` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `specific_specialization` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `job_specialization` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `inside_university` enum('داخل','خارج') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `participants`
+--
+
+INSERT INTO `participants` (`id`, `full_name`, `gender`, `phone`, `work_place`, `academic_title`, `academic_rank`, `job_title`, `general_specialization`, `specific_specialization`, `job_specialization`, `inside_university`, `created_at`) VALUES
+(1, 'موسى ثائر موسى', 'ذكر', '07711956676', 'ماادري', 'إداري', '', NULL, 'طالب', 'فني', '', 'داخل', '2026-03-03 21:51:40'),
+(2, 'عبوري سيف فراس', 'ذكر', '07702505172', 'ماادري', 'إداري', '', NULL, 'مبرمج', 'شبكات', '', 'خارج', '2026-03-04 06:25:50'),
+(3, 'ابها ابراهيم', 'أنثى', '9876543234', 'ثقفغع', 'فني', '', NULL, 'متها', 'يبلات', '', 'داخل', '2026-03-09 20:40:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('admin','user') COLLATE utf8mb4_unicode_ci DEFAULT 'admin',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `role`, `created_at`) VALUES
+(3, 'mosa', '$2y$10$zgZlVIIb4ZLvurR4xkrDzODIMMbzmhw5itaOxgQlQtSsTI6XybOvq', 'admin', '2026-03-04 06:15:51');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `courses`
+--
+ALTER TABLE `courses`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_course_name` (`course_name`),
+  ADD KEY `idx_start_date` (`start_date`);
+
+--
+-- Indexes for table `course_participants`
+--
+ALTER TABLE `course_participants`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `course_id` (`course_id`,`participant_id`),
+  ADD KEY `participant_id` (`participant_id`);
+
+--
+-- Indexes for table `design`
+--
+ALTER TABLE `design`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `participants`
+--
+ALTER TABLE `participants`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_participant_name` (`full_name`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `courses`
+--
+ALTER TABLE `courses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `course_participants`
+--
+ALTER TABLE `course_participants`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `design`
+--
+ALTER TABLE `design`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `participants`
+--
+ALTER TABLE `participants`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `course_participants`
+--
+ALTER TABLE `course_participants`
+  ADD CONSTRAINT `course_participants_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `course_participants_ibfk_2` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
